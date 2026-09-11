@@ -1,374 +1,422 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🌿 EcoBloom – Interactive Prototype (Auto‑Predict)</title>
-  <meta name="description" content="EcoBloom: Bright, interactive one-page prototype that auto-detects your location and auto-predicts bloom using GDD."/>
-  <link rel="preconnect" href="https://unpkg.com">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <style>
-    * { box-sizing: border-box; }
-    :root {
-      --bg: #f7fff8; --panel:#ffffff; --card:#ffffff; --border:#e3f2e6;
-      --text:#1d3b2b; --muted:#6b8a78; --accent:#2ecc71; --accent2:#2f80ed;
-      --radius:16px; --shadow:0 14px 34px rgba(0,0,0,.12);
-    }
-    html, body { height: 100%; margin: 0; font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, 'Noto Sans', Arial, sans-serif; color: var(--text);
-      background: linear-gradient(180deg, #d9ffea 0%, #f7fff8 100%);
-    }
-    header { display:flex; align-items:center; justify-content:space-between; padding:18px 24px; position:sticky; top:0; background:rgba(255,255,255,.9); backdrop-filter:saturate(150%) blur(6px); border-bottom:1px solid var(--border); z-index:10 }
-    h1 { margin:0; font-size:26px; background:linear-gradient(90deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-    .logo{font-size:30px}
-    .grid{display:grid; grid-template-columns:340px 1fr; gap:18px; padding:16px}
-    @media(max-width: 900px){ .grid{grid-template-columns:1fr} }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jordan — Your Journey</title>
+<meta name="description" content="A personalized Jordan travel planner for discovering destinations, experiences and itineraries.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+:root{
+  --ink:#151312;--paper:#f5efe5;--sand:#d8c09a;--rose:#a9553c;--rose2:#d2785c;
+  --cream:#fffaf1;--muted:#786f64;--line:rgba(21,19,18,.12);--white:#fff;
+  --shadow:0 24px 70px rgba(25,18,12,.14);--radius:26px;
+}
+*{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;background:var(--paper);color:var(--ink);font-family:"DM Sans",sans-serif}
+button,input{font:inherit}.container{width:min(1180px,92%);margin:auto}
+nav{position:fixed;z-index:20;top:18px;left:50%;transform:translateX(-50%);width:min(1160px,92%);
+background:rgba(255,250,241,.78);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.6);border-radius:999px;
+padding:10px 14px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 12px 35px rgba(0,0,0,.08)}
+.logo{font-family:"Playfair Display";font-weight:700;font-size:21px;letter-spacing:.5px}.logo span{color:var(--rose)}
+.navlinks{display:flex;gap:22px;font-size:13px}.navlinks a{text-decoration:none;color:inherit}.actions{display:flex;gap:8px;align-items:center}
+.lang{border:0;background:var(--ink);color:white;border-radius:999px;padding:9px 13px;cursor:pointer}
+.hero{min-height:94vh;display:grid;place-items:center;position:relative;overflow:hidden;background:
+radial-gradient(circle at 80% 20%,rgba(210,120,92,.45),transparent 28%),
+radial-gradient(circle at 10% 80%,rgba(216,192,154,.55),transparent 30%),
+linear-gradient(135deg,#1a1512,#4c3024 52%,#8d513e)}
+.hero:before{content:"";position:absolute;inset:0;background:
+linear-gradient(rgba(10,7,5,.3),rgba(10,7,5,.48)),
+url("https://images.unsplash.com/photo-1579606032821-4e6161c81bd3?auto=format&fit=crop&w=2200&q=85") center/cover;opacity:.75}
+.hero-content{position:relative;color:white;text-align:center;padding:150px 20px 100px;max-width:900px}
+.kicker{letter-spacing:4px;text-transform:uppercase;font-size:12px;opacity:.8}.hero h1{font-family:"Playfair Display";font-size:clamp(64px,12vw,150px);line-height:.84;margin:22px 0}.hero p{font-size:18px;max-width:650px;margin:0 auto 30px;color:rgba(255,255,255,.86)}
+.cta{display:inline-flex;align-items:center;gap:10px;background:#fff;color:var(--ink);padding:15px 22px;border-radius:999px;text-decoration:none;font-weight:700;transition:.25s}.cta:hover{transform:translateY(-3px);box-shadow:0 14px 35px rgba(0,0,0,.2)}
+.section{padding:100px 0}.section-head{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:34px}.eyebrow{color:var(--rose);font-weight:800;text-transform:uppercase;letter-spacing:2px;font-size:11px}.section h2{font-family:"Playfair Display";font-size:clamp(38px,6vw,68px);line-height:.95;margin:10px 0}.section-intro{color:var(--muted);max-width:560px;line-height:1.7}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{background:rgba(255,250,241,.82);border:1px solid var(--line);border-radius:var(--radius);padding:22px;min-height:180px;box-shadow:0 10px 35px rgba(30,20,10,.04);transition:.25s}.card:hover{transform:translateY(-5px);box-shadow:var(--shadow)}
+.card .icon{font-size:30px}.card h3{margin:20px 0 8px;font-size:18px}.card p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}
+.planner{background:var(--ink);color:white;border-radius:38px;padding:42px;box-shadow:var(--shadow)}.planner-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:35px}.progress{height:5px;background:rgba(255,255,255,.12);border-radius:10px;margin:25px 0}.progress i{display:block;height:100%;width:20%;background:var(--rose2);border-radius:10px;transition:.4s}.qnum{color:#d99b83;font-size:12px;text-transform:uppercase;letter-spacing:2px}.question{font-family:"Playfair Display";font-size:38px;margin:8px 0 22px}.options{display:grid;grid-template-columns:1fr 1fr;gap:10px}.opt{background:#211d1a;color:white;border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:16px;text-align:left;cursor:pointer;transition:.2s}.opt:hover,.opt.selected{border-color:#e29a7d;background:#382822;transform:translateY(-2px)}
+.planner-preview{border-radius:25px;background:linear-gradient(145deg,#d8c09a,#9e503a);min-height:390px;padding:25px;position:relative;overflow:hidden}.planner-preview:after{content:"JORDAN";font-family:"Playfair Display";font-size:110px;position:absolute;bottom:-20px;right:-20px;opacity:.12}.preview-label{font-size:11px;text-transform:uppercase;letter-spacing:2px;opacity:.7}.preview-stat{font-size:42px;font-family:"Playfair Display";margin-top:8px}.mini-list{margin-top:28px;display:grid;gap:9px}.mini-list div{background:rgba(255,255,255,.17);border:1px solid rgba(255,255,255,.18);padding:12px;border-radius:14px}
+.map-wrap{background:#e9e0d2;border-radius:32px;overflow:hidden;box-shadow:var(--shadow);position:relative}.map{height:600px}.map-overlay{position:absolute;z-index:500;top:18px;left:18px;background:rgba(255,250,241,.93);backdrop-filter:blur(12px);padding:16px;border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.1);max-width:260px}.map-overlay strong{font-family:"Playfair Display";font-size:22px}.filters{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.filter{border:1px solid var(--line);background:white;border-radius:999px;padding:7px 10px;font-size:11px;cursor:pointer}.filter.active{background:var(--ink);color:white}
+.itinerary{display:grid;grid-template-columns:1fr 1fr;gap:18px}.day{background:var(--cream);border:1px solid var(--line);border-radius:25px;padding:24px}.day-top{display:flex;justify-content:space-between}.day h3{margin:4px 0 15px;font-family:"Playfair Display";font-size:28px}.stop{display:grid;grid-template-columns:70px 1fr;gap:12px;padding:13px 0;border-top:1px solid var(--line)}.time{font-weight:800;font-size:12px;color:var(--rose)}.stop b{font-size:14px}.stop small{display:block;color:var(--muted);margin-top:4px;line-height:1.45}
+.result{display:none;background:linear-gradient(135deg,#1a1512,#5a3427);color:white;border-radius:32px;padding:38px;margin-top:22px}.result.show{display:block}.result h3{font-family:"Playfair Display";font-size:50px;margin:5px 0}.pill{display:inline-block;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);padding:7px 10px;border-radius:999px;font-size:11px;margin:3px}
+.footer{background:var(--ink);color:white;padding:65px 0;margin-top:80px}.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:40px}.footer p{color:#aaa;line-height:1.7}.source{font-size:11px;color:#aaa;margin-top:20px}.source a{color:#d9a18b}
+@media(max-width:900px){.navlinks{display:none}.cards{grid-template-columns:1fr 1fr}.planner-grid,.itinerary{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr}.map{height:500px}}
+@media(max-width:560px){.cards{grid-template-columns:1fr}.planner{padding:24px}.options{grid-template-columns:1fr}.hero h1{font-size:72px}.section{padding:70px 0}}
 
-    .panel{background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow)}
-    .panel h2{margin:0 0 8px}
-    .muted{color:var(--muted)}
-    label{display:block; margin:6px 0 6px}
-    input,select,button{padding:10px 12px; border-radius:12px; border:1px solid #cfe9d6; background:#f9fff9; color:var(--text)}
-    input,select{width:100%}
-    .btn{cursor:pointer; background:linear-gradient(180deg,#25d06f,#1bbd62); color:#fff; border:1px solid #1aa85a; transition:transform .08s ease, box-shadow .08s ease}
-    .btn:hover{transform:translateY(-1px); box-shadow:0 10px 22px rgba(37,208,111,.28)}
+/* ===== V3 EXPERIENCE LAYER ===== */
+:root{--gold:#c99b55;--glass:rgba(255,250,241,.72)}
+body{overflow-x:hidden}
+.cursor-glow{position:fixed;width:260px;height:260px;border-radius:50%;pointer-events:none;z-index:1;background:radial-gradient(circle,rgba(210,120,92,.12),transparent 68%);transform:translate(-50%,-50%);mix-blend-mode:multiply}
+.hero-content{z-index:2}
+.hero .hero-orbit{position:absolute;z-index:1;right:8%;bottom:12%;width:180px;height:180px;border:1px solid rgba(255,255,255,.25);border-radius:50%;animation:spin 18s linear infinite}
+.hero .hero-orbit:before,.hero .hero-orbit:after{content:"";position:absolute;border-radius:50%;background:#fff;box-shadow:0 0 25px rgba(255,255,255,.7)}
+.hero .hero-orbit:before{width:8px;height:8px;top:18px;left:32px}.hero .hero-orbit:after{width:5px;height:5px;bottom:22px;right:35px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.reveal{opacity:0;transform:translateY(24px);transition:.8s ease}.reveal.visible{opacity:1;transform:none}
+.story-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+.story-card{min-height:300px;border-radius:28px;overflow:hidden;position:relative;background:#30251e;color:white;box-shadow:var(--shadow);cursor:pointer}
+.story-card img{width:100%;height:100%;object-fit:cover;transition:.7s}.story-card:hover img{transform:scale(1.06)}
+.story-card:after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 35%,rgba(0,0,0,.78))}
+.story-copy{position:absolute;z-index:2;left:22px;right:22px;bottom:20px}.story-copy h3{font-family:"Playfair Display";font-size:29px;margin:4px 0}.story-copy p{font-size:12px;color:#eee}
+.map-tools{position:absolute;z-index:600;right:18px;top:18px;width:280px;background:rgba(255,250,241,.95);backdrop-filter:blur(14px);border-radius:18px;padding:14px;box-shadow:0 10px 30px rgba(0,0,0,.12)}
+.map-search{width:100%;border:1px solid var(--line);border-radius:12px;padding:11px;background:white;outline:none}
+.map-tools-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
+.map-chip{border:1px solid var(--line);background:white;border-radius:999px;padding:7px 9px;font-size:10px;cursor:pointer}
+.map-chip.active{background:var(--ink);color:#fff}
+.map-legend{margin-top:10px;font-size:10px;color:var(--muted);line-height:1.6}
+.map-route-btn{margin-top:10px;width:100%;border:0;background:var(--rose);color:#fff;border-radius:12px;padding:10px;cursor:pointer;font-weight:700}
+.map-counter{font-size:11px;color:var(--muted);margin-top:7px}
+.map-note{position:absolute;z-index:500;left:18px;bottom:18px;background:rgba(21,19,18,.88);color:#fff;border-radius:15px;padding:10px 13px;font-size:11px;max-width:280px}
+.explorer{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.explorer-panel{background:var(--cream);border:1px solid var(--line);border-radius:26px;padding:24px}
+.explorer-list{display:grid;gap:9px;max-height:430px;overflow:auto;padding-right:3px}
+.place-row{display:grid;grid-template-columns:52px 1fr auto;gap:10px;align-items:center;padding:11px;border:1px solid var(--line);border-radius:15px;background:white;cursor:pointer}
+.place-row:hover{transform:translateX(3px)}.place-row .emoji{font-size:23px}.place-row b{font-size:13px}.place-row small{display:block;color:var(--muted);margin-top:2px}
+.add-mini{border:0;border-radius:999px;padding:7px 9px;background:var(--ink);color:#fff;font-size:10px;cursor:pointer}
+.journey-board{background:linear-gradient(145deg,#211b17,#70402f);color:#fff;border-radius:28px;padding:25px;min-height:430px;position:relative;overflow:hidden}
+.journey-board:after{content:"JOURNEY";position:absolute;font:700 110px "Playfair Display";opacity:.07;right:-25px;bottom:-15px}
+.route-line{display:grid;gap:8px;margin-top:20px;position:relative}.route-line:before{content:"";position:absolute;left:10px;top:13px;bottom:13px;width:1px;background:rgba(255,255,255,.25)}
+.route-stop{display:grid;grid-template-columns:21px 1fr;gap:12px;position:relative;z-index:1}.route-dot{width:21px;height:21px;border-radius:50%;background:#e3a083;border:5px solid #5e3629}.route-stop b{font-size:13px}.route-stop small{display:block;color:#d7c8c0;font-size:11px;margin-top:2px}
+.quick-facts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.fact{background:var(--cream);border:1px solid var(--line);border-radius:20px;padding:20px}.fact strong{font:700 30px "Playfair Display";display:block}.fact span{color:var(--muted);font-size:11px}
+.modal{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.55);backdrop-filter:blur(8px);display:none;place-items:center;padding:18px}.modal.open{display:grid}
+.modal-box{width:min(760px,100%);max-height:90vh;overflow:auto;background:var(--cream);border-radius:28px;padding:28px;box-shadow:0 30px 100px rgba(0,0,0,.3);position:relative}.close{position:absolute;right:18px;top:18px;border:0;background:var(--ink);color:#fff;border-radius:50%;width:34px;height:34px;cursor:pointer}.modal-box h3{font:600 40px "Playfair Display";margin:0 45px 8px 0}.modal-box p{line-height:1.7;color:var(--muted)}.source-badge{display:inline-block;background:#eee1d0;border-radius:999px;padding:7px 10px;font-size:10px;margin:3px}
+.toast{position:fixed;z-index:1100;left:50%;bottom:22px;transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:12px 17px;border-radius:999px;font-size:12px;opacity:0;pointer-events:none;transition:.3s}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:900px){.story-strip,.explorer{grid-template-columns:1fr}.quick-facts{grid-template-columns:1fr 1fr}.map-tools{left:18px;right:18px;width:auto}.map-note{bottom:14px;max-width:230px}.map{height:570px}}
+@media(max-width:560px){nav{top:8px;padding:9px 11px}.logo{font-size:18px}.hero-content{padding-top:130px}.hero p{font-size:15px}.section-head{display:block}.section-intro{margin-top:18px}.story-card{min-height:240px}.map{height:620px}.map-overlay{top:15px;left:15px;right:15px;max-width:none}.map-tools{top:135px;left:15px;right:15px}.map-note{display:none}.quick-facts{grid-template-columns:1fr 1fr}.modal-box{padding:21px}.modal-box h3{font-size:32px}}
 
-    #map{height:58vh; border-radius:var(--radius); border:2px solid #bff0cc; overflow:hidden; box-shadow:var(--shadow)}
+/* ===== V3 EXPERIENCE LAYER ===== */
+.cursor-glow{position:fixed;width:260px;height:260px;border-radius:50%;pointer-events:none;z-index:1;background:radial-gradient(circle,rgba(210,120,92,.12),transparent 68%);transform:translate(-50%,-50%)}
+.hero-content{z-index:2}.hero .hero-orbit{position:absolute;z-index:1;right:8%;bottom:12%;width:180px;height:180px;border:1px solid rgba(255,255,255,.25);border-radius:50%;animation:spin 18s linear infinite}
+.hero .hero-orbit:before,.hero .hero-orbit:after{content:"";position:absolute;border-radius:50%;background:#fff;box-shadow:0 0 25px rgba(255,255,255,.7)}
+.hero .hero-orbit:before{width:8px;height:8px;top:18px;left:32px}.hero .hero-orbit:after{width:5px;height:5px;bottom:22px;right:35px}@keyframes spin{to{transform:rotate(360deg)}}
+.reveal{opacity:0;transform:translateY(24px);transition:.8s ease}.reveal.visible{opacity:1;transform:none}
+.story-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.story-card{min-height:300px;border-radius:28px;overflow:hidden;position:relative;background:#30251e;color:white;box-shadow:var(--shadow);cursor:pointer}
+.story-card img{width:100%;height:100%;object-fit:cover;transition:.7s}.story-card:hover img{transform:scale(1.06)}.story-card:after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 35%,rgba(0,0,0,.78))}
+.story-copy{position:absolute;z-index:2;left:22px;right:22px;bottom:20px}.story-copy h3{font-family:"Playfair Display";font-size:29px;margin:4px 0}.story-copy p{font-size:12px;color:#eee}
+.map-tools{position:absolute;z-index:600;right:18px;top:18px;width:290px;background:rgba(255,250,241,.95);backdrop-filter:blur(14px);border-radius:18px;padding:14px;box-shadow:0 10px 30px rgba(0,0,0,.12)}
+.map-search{width:100%;border:1px solid var(--line);border-radius:12px;padding:11px;background:white;outline:none}.map-tools-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
+.map-chip{border:1px solid var(--line);background:white;border-radius:999px;padding:7px 9px;font-size:10px;cursor:pointer}.map-chip.active{background:var(--ink);color:#fff}
+.map-legend{margin-top:10px;font-size:10px;color:var(--muted);line-height:1.6}.map-route-btn{margin-top:10px;width:100%;border:0;background:var(--rose);color:#fff;border-radius:12px;padding:10px;cursor:pointer;font-weight:700}.map-counter{font-size:11px;color:var(--muted);margin-top:7px}
+.map-note{position:absolute;z-index:500;left:18px;bottom:18px;background:rgba(21,19,18,.88);color:#fff;border-radius:15px;padding:10px 13px;font-size:11px;max-width:280px}
+.explorer{display:grid;grid-template-columns:1fr 1fr;gap:18px}.explorer-panel{background:var(--cream);border:1px solid var(--line);border-radius:26px;padding:24px}
+.explorer-list{display:grid;gap:9px;max-height:430px;overflow:auto;padding-right:3px}.place-row{display:grid;grid-template-columns:45px 1fr auto;gap:10px;align-items:center;padding:11px;border:1px solid var(--line);border-radius:15px;background:white;cursor:pointer;transition:.2s}.place-row:hover{transform:translateX(3px)}.place-row .emoji{font-size:22px}.place-row b{font-size:13px}.place-row small{display:block;color:var(--muted);margin-top:2px}.add-mini{border:0;border-radius:999px;padding:7px 9px;background:var(--ink);color:#fff;font-size:10px;cursor:pointer}
+.journey-board{background:linear-gradient(145deg,#211b17,#70402f);color:#fff;border-radius:28px;padding:25px;min-height:430px;position:relative;overflow:hidden}.journey-board:after{content:"JOURNEY";position:absolute;font:700 110px "Playfair Display";opacity:.07;right:-25px;bottom:-15px}
+.route-line{display:grid;gap:8px;margin-top:20px;position:relative}.route-line:before{content:"";position:absolute;left:10px;top:13px;bottom:13px;width:1px;background:rgba(255,255,255,.25)}.route-stop{display:grid;grid-template-columns:21px 1fr;gap:12px;position:relative;z-index:1}.route-dot{width:21px;height:21px;border-radius:50%;background:#e3a083;border:5px solid #5e3629}.route-stop b{font-size:13px}.route-stop small{display:block;color:#d7c8c0;font-size:11px;margin-top:2px}
+.quick-facts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.fact{background:var(--cream);border:1px solid var(--line);border-radius:20px;padding:20px}.fact strong{font:700 30px "Playfair Display";display:block}.fact span{color:var(--muted);font-size:11px}
+.modal{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.55);backdrop-filter:blur(8px);display:none;place-items:center;padding:18px}.modal.open{display:grid}.modal-box{width:min(760px,100%);max-height:90vh;overflow:auto;background:var(--cream);border-radius:28px;padding:28px;box-shadow:0 30px 100px rgba(0,0,0,.3);position:relative}.close{position:absolute;right:18px;top:18px;border:0;background:var(--ink);color:#fff;border-radius:50%;width:34px;height:34px;cursor:pointer}.modal-box h3{font:600 40px "Playfair Display";margin:0 45px 8px 0}.modal-box p{line-height:1.7;color:var(--muted)}.source-badge{display:inline-block;background:#eee1d0;border-radius:999px;padding:7px 10px;font-size:10px;margin:3px}
+.toast{position:fixed;z-index:1100;left:50%;bottom:22px;transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:12px 17px;border-radius:999px;font-size:12px;opacity:0;pointer-events:none;transition:.3s}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:900px){.story-strip,.explorer{grid-template-columns:1fr}.quick-facts{grid-template-columns:1fr 1fr}.map-tools{left:18px;right:18px;width:auto}.map-note{bottom:14px;max-width:230px}}
+@media(max-width:560px){nav{top:8px;padding:9px 11px}.logo{font-size:18px}.hero-content{padding-top:130px}.hero p{font-size:15px}.section-head{display:block}.section-intro{margin-top:18px}.story-card{min-height:240px}.map{height:620px}.map-overlay{top:15px;left:15px;right:15px;max-width:none}.map-tools{top:135px;left:15px;right:15px}.map-note{display:none}.quick-facts{grid-template-columns:1fr 1fr}.modal-box{padding:21px}.modal-box h3{font-size:32px}}
 
-    .cards{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:12px}
-    @media(max-width:900px){ .cards{grid-template-columns:1fr} }
-    .card{background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:12px; box-shadow:var(--shadow)}
-    .card h4{margin:0 0 6px}
-    .big{font-size:18px; min-height:26px}
-
-    .charts{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px}
-    @media(max-width:900px){ .charts{grid-template-columns:1fr} }
-
-    table{width:100%; border-collapse:collapse}
-    th,td{padding:8px; text-align:center; border-bottom:1px solid #e9f7ee}
-    th{background:#f0fff4}
-
-    .status{padding:10px 12px; margin-bottom:10px; background:#eefcf1; border:1px dashed #bfe9c8; border-radius:12px}
-    footer{ text-align:center; padding:18px; color:var(--muted) }
-    /* Monthly climate mini-bars */
-    .monthly{display:grid;grid-template-columns:repeat(12,1fr);gap:8px;margin-top:12px}
-    .mcell{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:8px;box-shadow:var(--shadow);text-align:center}
-    .mname{font-size:12px;color:var(--muted)}
-    .barwrap{height:48px;display:flex;align-items:flex-end;justify-content:center;gap:4px}
-    .bar{width:10px;background:linear-gradient(180deg,var(--accent2),#bfe1ff);border-radius:8px}
-    .bar2{width:10px;background:linear-gradient(180deg,#ffd15a,#ff8a00);border-radius:8px}
-    .bar3{width:10px;background:linear-gradient(180deg,#7ee8a8,#2ecc71);border-radius:8px}
-    .mini{font-size:11px;margin-top:4px;color:var(--muted)}
-  </style>
+.lang-menu{position:relative}.lang-current{border:0;background:var(--ink);color:#fff;border-radius:999px;padding:9px 13px;cursor:pointer}.lang-dropdown{position:absolute;right:0;top:44px;background:var(--cream);border:1px solid var(--line);border-radius:15px;padding:6px;display:none;box-shadow:var(--shadow);min-width:130px}.lang-dropdown.open{display:block}.lang-dropdown button{display:block;width:100%;text-align:left;border:0;background:transparent;padding:9px 10px;border-radius:10px;cursor:pointer}.lang-dropdown button:hover{background:#eee3d4}
+.itinerary-controls{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:18px}.itinerary-controls button{border:1px solid var(--line);background:var(--cream);padding:10px 14px;border-radius:999px;cursor:pointer}.itinerary-controls button.active{background:var(--ink);color:#fff}
+.detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.detail-pill{background:#f1e9dc;border-radius:12px;padding:9px;font-size:10px}.detail-pill b{display:block;font-size:11px;margin-bottom:2px}.day-note{margin-top:14px;background:#f0e5d6;border-radius:15px;padding:12px;font-size:11px;color:#655b50;line-height:1.55}
+.itin-table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:22px;background:var(--cream)}.itin-table{width:100%;min-width:920px;border-collapse:collapse}.itin-table th{background:#191614;color:#fff;text-align:left;padding:13px;font-size:11px;letter-spacing:.08em;text-transform:uppercase}.itin-table td{padding:13px;border-top:1px solid var(--line);vertical-align:top;font-size:12px;line-height:1.45}.itin-table tr:hover td{background:#f6eee2}.itin-day-title{display:flex;justify-content:space-between;gap:15px;align-items:end;margin:26px 0 12px}.itin-day-title h3{margin:0;font-family:"Playfair Display";font-size:27px}.itin-summary{color:var(--muted);font-size:12px}.itin-pill{display:inline-block;padding:5px 8px;border-radius:999px;background:#eee2d1;margin:2px;font-size:10px}.itin-mobile-note{font-size:11px;color:var(--muted);margin:8px 0 0}
+@media(max-width:700px){.detail-grid{grid-template-columns:1fr 1fr}}
+#mapSection{scroll-margin-top:90px}
+</style>
 </head>
-<body>
-  <header>
-    <div style="display:flex; align-items:center; gap:10px">
-      <div class="logo">🌿</div>
-      <h1>EcoBloom</h1>
+<body><div class="cursor-glow" id="cursorGlow"></div>
+<nav>
+  <div class="logo">JORDAN<span>.</span></div>
+  <div class="navlinks">
+    <a href="#discover" data-i="discover">Discover</a>
+    <a href="#planner" data-i="plan">Plan</a>
+    <a href="#mapSection" data-i="map">Map</a>
+    <a href="#itinerary" data-i="journey">Journey</a><a href="#irbid">Irbid</a>
+  </div>
+  <div class="actions"><div class="lang-menu"><button class="lang-current" id="langBtn">EN</button><div class="lang-dropdown" id="langDropdown"><button data-lang="en">🇬🇧 English</button><button data-lang="pl">🇵🇱 Polski</button></div></div></div>
+</nav>
+
+<header class="hero">
+  <div class="hero-orbit"></div><div class="hero-orbit"></div><div class="hero-content">
+    <div class="kicker" data-t="heroKicker">The Kingdom of Time</div>
+    <h1>YOUR<br>JORDAN</h1>
+    <p data-t="heroText">Not every traveler should experience Jordan the same way. Tell us what moves you — we'll build the route.</p>
+    <a class="cta" href="#planner" data-t="heroCta">Build my journey →</a>
+  </div>
+</header>
+
+<section class="section" id="discover">
+<div class="container">
+  <div class="section-head">
+    <div><div class="eyebrow">01 — Discover</div><h2 data-t="discoverTitle">A country of contrasts.</h2></div>
+    <p class="section-intro" data-t="discoverIntro">From Roman cities and Nabataean rock-cut architecture to desert landscapes and the Red Sea, Jordan packs extraordinary variety into a compact journey.</p>
+  </div>
+  <div class="cards">
+    <div class="card"><div class="icon">🏛️</div><h3>History</h3><p>Petra, Jerash, Madaba, Karak, Umm Qais and more.</p></div>
+    <div class="card"><div class="icon">🏜️</div><h3>Adventure</h3><p>Wadi Rum, Wadi Mujib, hiking routes and desert experiences.</p></div>
+    <div class="card"><div class="icon">🌊</div><h3>Sea & Wellness</h3><p>Dead Sea landscapes, Aqaba and the Red Sea.</p></div>
+    <div class="card"><div class="icon">🍽️</div><h3>Food & Culture</h3><p>Local dishes, markets, hospitality and living traditions.</p></div>
+  </div>
+</div>
+</section>
+
+<section class="section reveal">
+<div class="container">
+  <div class="section-head">
+    <div><div class="eyebrow">01.5 — Beyond the postcard</div><h2>See the Jordan most itineraries miss.</h2></div>
+    <p class="section-intro">Famous landmarks belong here — but they are only one layer of the country. Explore northern ruins, old towns, desert architecture, valleys, trails and the Red Sea.</p>
+  </div>
+  <div class="story-strip">
+    <article class="story-card" data-place="Umm Qais"><img src="https://images.unsplash.com/photo-1609947017136-9daf32a4a5b7?auto=format&fit=crop&w=1000&q=80"><div class="story-copy"><div class="eyebrow" style="color:#f0ae92">North</div><h3>Ancient views</h3><p>Umm Qais and the northern hills.</p></div></article>
+    <article class="story-card" data-place="As-Salt"><img src="https://images.unsplash.com/photo-1596401057633-54a8fe8ef647?auto=format&fit=crop&w=1000&q=80"><div class="story-copy"><div class="eyebrow" style="color:#f0ae92">Culture</div><h3>Walk the old streets</h3><p>Architecture, hospitality and local life.</p></div></article>
+    <article class="story-card" data-place="Azraq"><img src="https://images.unsplash.com/photo-1518684079-3c830dcef090?auto=format&fit=crop&w=1000&q=80"><div class="story-copy"><div class="eyebrow" style="color:#f0ae92">East</div><h3>Desert, water & wildlife</h3><p>Oases, birding and the eastern desert.</p></div></article>
+  </div>
+</div>
+</section>
+
+<section class="section reveal">
+<div class="container">
+  <div class="section-head"><div><div class="eyebrow">01.5 — Beyond the postcard</div><h2>See the Jordan most itineraries miss.</h2></div>
+  <p class="section-intro">Famous landmarks belong here — but they are only one layer. Explore northern ruins, old towns, desert architecture, valleys, trails and the Red Sea.</p></div>
+  <div class="story-strip">
+    <article class="story-card" data-place="Umm Qais"><img src="https://images.unsplash.com/photo-1609947017136-9daf32a4a5b7?auto=format&fit=crop&w=1000&q=80"><div class="story-copy"><div class="eyebrow" style="color:#f0ae92">North</div><h3>Ancient views</h3><p>Umm Qais and the northern hills.</p></div></article>
+    <article class="story-card" data-place="As-Salt"><img src="https://images.unsplash.com/photo-1596401057633-54a8fe8ef647?auto=format&fit=crop&w=1000&q=80"><div class="story-copy"><div class="eyebrow" style="color:#f0ae92">Culture</div><h3>Walk the old streets</h3><p>Architecture, hospitality and local life.</p></div></article>
+    <article class="story-card" data-place="Azraq"><img src="https://images.unsplash.com/photo-1518684079-3c830dcef090?auto=format&fit=crop&w=1000&q=80"><div class="story-copy"><div class="eyebrow" style="color:#f0ae92">East</div><h3>Desert, water & wildlife</h3><p>Oases, birding and the eastern desert.</p></div></article>
+  </div>
+</div>
+</section>
+
+<section class="section" id="planner" style="padding-top:30px">
+<div class="container">
+  <div class="section-head">
+    <div><div class="eyebrow">02 — Personalize</div><h2>Build a Jordan that feels like yours.</h2></div>
+    <p class="section-intro">Choose as many as you like. There are no wrong answers — your selections shape the destinations, experiences and pace of your route.</p>
+  </div>
+  <div class="planner">
+    <div class="planner-grid">
+      <div>
+        <div class="qnum" id="qnum">Step 1 of 6</div>
+        <div class="question" id="question">What are you excited to experience?</div>
+        <div class="progress"><i id="bar"></i></div>
+        <div class="options" id="options"></div>
+        <div style="display:flex;justify-content:space-between;margin-top:20px">
+          <button class="opt" id="backBtn" style="width:auto;padding:11px 16px" disabled>← Back</button>
+          <button class="cta" id="nextBtn" style="border:0;cursor:pointer;padding:11px 18px">Next →</button>
+        </div>
+        <div id="selectionHint" style="margin-top:12px;color:#aaa;font-size:12px">Select one or more.</div>
+      </div>
+      <div class="planner-preview">
+        <div class="preview-label">Your journey profile</div>
+        <div class="preview-stat" id="match">0 choices</div>
+        <div class="mini-list" id="previewList">
+          <div>Choose multiple interests</div><div>Set your trip style</div><div>We'll build your route</div>
+        </div>
+      </div>
     </div>
-    <div class="muted">Auto‑detects your location • Auto‑predicts bloom</div>
-  </header>
+    <div class="result" id="result"></div>
+  </div>
+</div>
+</section>
 
-  <main class="grid">
-    <aside class="panel">
-      <h2>Auto Mode</h2>
-      <p class="muted">EcoBloom automatically uses your location and a sensible default sowing date to estimate bloom. You can tweak below if you like.</p>
-      <label>Plant Type</label>
-      <select id="plantType">
-        <option value="tomato">Tomato</option>
-        <option value="cucumber">Cucumber</option>
-        <option value="pepper">Pepper</option>
-        <option value="wheat">Wheat</option>
-        <option value="lettuce">Lettuce</option>
-        <option value="custom">Custom</option>
-      </select>
-      <label>Sowing Date</label>
-      <input id="sowDate" type="date" />
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:8px">
-        <div>
-          <label>Base Temp (°C)</label>
-          <input id="baseTemp" type="number" step="0.1" value="10" />
-        </div>
-        <div>
-          <label>Bloom GDD Threshold</label>
-          <input id="gddTarget" type="number" step="10" value="600" />
-        </div>
+<section class="section reveal">
+<div class="container">
+  <div class="quick-facts">
+    <div class="fact"><strong>8</strong><span>Jordanian properties on UNESCO's World Heritage List</span></div>
+    <div class="fact"><strong>4</strong><span>distinct journey zones in this prototype</span></div>
+    <div class="fact"><strong>25+</strong><span>destinations & experiences in the prototype database</span></div>
+    <div class="fact"><strong>∞</strong><span>possible personalized combinations</span></div>
+  </div>
+</div>
+</section>
+
+<section class="section reveal" id="explorer">
+<div class="container">
+  <div class="section-head"><div><div class="eyebrow">02.5 — Explore all</div><h2>Don't know what you want yet?</h2></div><p class="section-intro">Browse Jordan first. Open any place for a quick profile, then add it to your personal journey.</p></div>
+  <div class="explorer">
+    <div class="explorer-panel">
+      <div style="display:flex;gap:8px;margin-bottom:13px"><input id="placeSearch" class="map-search" placeholder="Search destinations, regions or interests..."></div>
+      <div class="map-tools-row" id="exploreFilters"><button class="map-chip active" data-xfilter="all">All</button><button class="map-chip" data-xfilter="history">History</button><button class="map-chip" data-xfilter="nature">Nature</button><button class="map-chip" data-xfilter="adventure">Adventure</button><button class="map-chip" data-xfilter="sea">Sea</button><button class="map-chip" data-xfilter="culture">Culture</button></div>
+      <div class="explorer-list" id="explorerList" style="margin-top:14px"></div>
+    </div>
+    <div class="journey-board">
+      <div class="eyebrow" style="color:#f0ae92">My journey board</div>
+      <h3 style="font:600 42px 'Playfair Display';margin:5px 0">Your saved places.</h3>
+      <p style="color:#d7c8c0;line-height:1.6;font-size:13px">Build a shortlist before the planner turns it into a route.</p>
+      <div class="route-line" id="savedPlaces"><div class="route-stop"><span class="route-dot"></span><div><b>Your journey is empty</b><small>Use “Add” on any place to start.</small></div></div></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="section" id="mapSection">
+<div class="container">
+  <div class="section-head"><div><div class="eyebrow">03 — Explore</div><h2 data-t="mapTitle">Jordan, on your terms.</h2></div><p class="section-intro">Select a category. Click a marker. Then add the place to your journey.</p></div>
+  <div class="map-wrap">
+    <div class="map-overlay"><strong>Explore Jordan</strong><div class="filters">
+      <button class="filter active" data-filter="all">All</button><button class="filter" data-filter="history">History</button><button class="filter" data-filter="nature">Nature</button><button class="filter" data-filter="sea">Sea</button><button class="filter" data-filter="adventure">Adventure</button>
+    </div></div>
+    <div class="map-tools">
+      <input id="mapSearch" class="map-search" placeholder="Search the map...">
+      <div class="map-tools-row">
+        <button class="map-chip active" data-mfilter="all">All</button><button class="map-chip" data-mfilter="history">History</button><button class="map-chip" data-mfilter="nature">Nature</button><button class="map-chip" data-mfilter="adventure">Adventure</button><button class="map-chip" data-mfilter="sea">Sea</button><button class="map-chip" data-mfilter="culture">Culture</button>
       </div>
-      <button id="btnPredict" class="btn" style="width:100%; margin-top:10px">Recalculate</button>
-      <p class="muted" id="assumptionNote" style="margin-top:8px"></p>
-    </aside>
+      <div class="map-counter" id="mapCounter"></div>
+      <button class="map-route-btn" id="fitJordan">Show all Jordan</button>
+      <div class="map-legend">Tip: click a destination for its profile. Use the explorer below to build a shortlist.</div>
+    </div>
+    <div class="map-note">Interactive destination map • approximate marker positions • verify live opening hours, prices and transport before travel.</div>
+    <div id="map" class="map"></div>
+  </div>
+</div>
+</section>
 
-    <section>
-      <div id="status" class="status">Detecting location…</div>
-      <div id="map"></div>
+<section class="section" id="itinerary">
+<div class="container">
+  <div class="section-head"><div><div class="eyebrow">04 — Your route</div><h2 data-t="itinerary">Your detailed itinerary.</h2></div><p class="section-intro">Every day is structured with timing, travel, meals, activities, pace, estimated duration and practical notes.</p></div>
+  <div class="itinerary-controls" id="dayControls"></div>
+  <div id="itin"></div>
+</div>
+</section>
 
-      <div class="cards">
-        <div class="card">
-          <h4>Predicted Bloom</h4>
-          <div id="prediction" class="big">—</div>
-        </div>
-        <div class="card">
-          <h4>Ideal Harvest</h4>
-          <div class="big" id="harvest">—</div>
-          <div class="muted" style="margin-top:6px">
-            Offset from bloom (days):
-            <input id="harvestOffset" type="number" value="45" style="width:90px; margin-inline-start:6px"> <button id="applyHarvest" class="btn" style="padding:6px 10px">Apply</button>
-          </div>
-        </div>
-        <div class="card">
-          <h4>Location</h4>
-          <div id="locationInfo" class="muted">—</div>
-        </div>
-      </div>
+<section class="section">
+<div class="container">
+  <div class="section-head"><div><div class="eyebrow">05 — Travel intelligence</div><h2>More than a map.</h2></div></div>
+  <div class="cards">
+    <div class="card"><div class="icon">💰</div><h3>Budget planner</h3><p>Estimate accommodation, food, transport, tickets and activities.</p></div>
+    <div class="card"><div class="icon">🧭</div><h3>Getting around</h3><p>Build transport choices into the route rather than leaving them as an afterthought.</p></div>
+    <div class="card"><div class="icon">🛂</div><h3>Before you go</h3><p>Visa, entry, Jordan Pass, practical information and preparation.</p></div>
+    <div class="card"><div class="icon">✓</div><h3>Verified facts</h3><p>Core destination facts are designed to be sourced from official Jordanian and UNESCO references.</p></div>
+  </div>
+</div>
+</section>
 
-      <div class="card" style="margin-top:12px">
-        <h4>Monthly Climate (last ~12 months)</h4>
-        <button id="btnMonthly" class="btn" style="margin:6px 0 10px">Analyze Monthly Climate</button>
-        <div id="monthlyGrid" class="monthly"></div>
-      </div>
+<div class="modal" id="placeModal"><div class="modal-box"><button class="close" id="closeModal">×</button><div class="eyebrow">Verified destination profile</div><h3 id="modalTitle"></h3><p id="modalDesc"></p><div id="modalTags"></div><p style="font-size:12px"><b>Source:</b> Core destination facts should be verified against official Jordanian tourism/government sources and UNESCO before production launch.</p><a id="modalSource" class="cta" style="padding:10px 15px;font-size:12px" target="_blank">Open source →</a></div></div>
+<div class="toast" id="toast">Added to your journey</div>
+<section class="section reveal" id="irbid">
+<div class="container">
+<div class="section-head"><div><div class="eyebrow">Northern Jordan</div><h2>Irbid deserves its own chapter.</h2></div><p class="section-intro">Not a footnote. Irbid is one of Jordan's official tourism destinations, with museums, cultural houses, northern archaeology and access to Umm Qais and Pella.</p></div>
+<div class="cards">
+<div class="card"><div class="icon">🏛️</div><h3>Dar Al-Saraya Museum</h3><p>Ottoman-era building and heritage stop in central Irbid.</p></div>
+<div class="card"><div class="icon">📖</div><h3>Beit Arar</h3><p>Cultural house connected to Jordanian poet Mustafa Wahbi Al-Tal.</p></div>
+<div class="card"><div class="icon">🏺</div><h3>Pella / Tabaqat Fahl</h3><p>Archaeological layers spanning ancient periods in Irbid Governorate.</p></div>
+<div class="card"><div class="icon">🌄</div><h3>Umm Qais / Gadara</h3><p>Greco-Roman ruins, volcanic stone architecture and northern views.</p></div>
+</div>
+</div>
+</section>
 
-      <div class="card" style="margin-top:12px">>
-          <h4>Location</h4>
-          <div id="locationInfo" class="muted">—</div>
-        </div>
-        <div class="card">
-          <h4>7‑Day Summary</h4>
-          <div id="weekSummary" class="muted">—</div>
-        </div>
-      </div>
+<footer class="footer">
+<div class="container footer-grid">
+  <div><div class="logo">JORDAN<span>.</span></div><p>Discover Jordan through a journey designed around you — not a generic checklist.</p></div>
+  <div><b>Languages</b><p>English<br>Polski</p></div>
+  <div><b>Sources</b><p><a href="https://international.visitjordan.com/" target="_blank">Jordan Tourism Board</a><br><a href="https://whc.unesco.org/en/statesparties/jo" target="_blank">UNESCO World Heritage</a></p></div>
+</div>
+</footer>
 
-      <div class="card" style="margin-top:12px">
-        <h4>Daily Weather Details</h4>
-        <table>
-          <thead><tr><th>Date</th><th>Min °C</th><th>Max °C</th><th>Rain mm</th></tr></thead>
-          <tbody id="weather"></tbody>
-        </table>
-      </div>
-    </section>
-  </main>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const I18N={
+en:{nav:["Discover","Plan","Map","Journey","Irbid"],discover:"Discover",plan:"Plan",map:"Map",journey:"Journey",heroKicker:"The Kingdom of Time",heroText:"Not every traveler should experience Jordan the same way. Tell us what moves you — we’ll build the route.",heroCta:"Build my journey →",discoverTitle:"A country of contrasts.",discoverIntro:"From Roman cities and Nabataean rock-cut architecture to desert landscapes and the Red Sea, Jordan packs extraordinary variety into a compact journey.",planner:"Build a Jordan that feels like yours.",next:"Next →",back:"← Back",build:"Build my Jordan →",step:"Step",selectMany:"Select as many as you like.",selectOne:"Select one option.",itinerary:"Your complete day-by-day itinerary",saved:"Your saved places.",show:"Show details",day:"DAY"},
+pl:{nav:["Odkrywaj","Planuj","Mapa","Podróż","Irbid"],discover:"Odkrywaj",plan:"Planuj",map:"Mapa",journey:"Podróż",heroKicker:"Królestwo czasu",heroText:"Nie każdy podróżnik powinien odkrywać Jordanię tak samo. Powiedz nam, co Cię interesuje — stworzymy trasę dla Ciebie.",heroCta:"Zbuduj moją podróż →",discoverTitle:"Kraj kontrastów.",discoverIntro:"Od rzymskich miast i nabatejskich zabytków po pustynie i Morze Czerwone — Jordania oferuje niezwykłą różnorodność na małej przestrzeni.",planner:"Zbuduj Jordanię dopasowaną do Ciebie.",next:"Dalej →",back:"← Wstecz",build:"Zbuduj moją podróż →",step:"Krok",selectMany:"Wybierz dowolną liczbę opcji.",selectOne:"Wybierz jedną opcję.",itinerary:"Pełny plan dzień po dniu",saved:"Zapisane miejsca.",show:"Pokaż szczegóły",day:"DZIEŃ"}
+};
+let lang="en";
+const langBtn=document.getElementById("langBtn"),langDropdown=document.getElementById("langDropdown");
+langBtn.onclick=()=>langDropdown.classList.toggle("open");
+document.querySelectorAll("[data-lang]").forEach(b=>b.onclick=()=>{setLang(b.dataset.lang);langDropdown.classList.remove("open")});
+function setLang(l){
+ lang=l;langBtn.textContent=l.toUpperCase();
+ document.querySelectorAll(".navlinks a").forEach((a,i)=>a.textContent=I18N[l].nav[i]);
+ document.querySelectorAll("[data-t]").forEach(e=>{if(I18N[l][e.dataset.t])e.textContent=I18N[l][e.dataset.t]});
+ if(typeof renderQ==="function")renderQ();
+ if(typeof renderItinerary==="function")renderItinerary();
+}
+const qs=[
+{key:"interests",q:{en:"What are you excited to experience?",pl:"Co najbardziej chcesz przeżyć?"},multi:true,o:[['history','🏛️ History & archaeology','🏛️ Historia i archeologia'],['culture','🎭 Local culture & traditions','🎭 Lokalna kultura i tradycje'],['food','🍽️ Food & markets','🍽️ Jedzenie i targi'],['adventure','🔥 Adventure & adrenaline','🔥 Przygoda i adrenalina'],['hiking','🥾 Hiking & trails','🥾 Wędrówki i szlaki'],['nature','🌿 Nature & wildlife','🌿 Natura i dzika przyroda'],['desert','🏜️ Desert landscapes','🏜️ Krajobrazy pustynne'],['sea','🌊 Sea & water','🌊 Morze i woda'],['wellness','🧘 Wellness & relaxation','🧘 Wellness i relaks'],['religion','🕊️ Faith & sacred places','🕊️ Wiara i miejsca sakralne'],['photography','📸 Photography','📸 Fotografia'],['architecture','🏘️ Architecture & old towns','🏘️ Architektura i stare miasta'],['family','👨‍👩‍👧 Family-friendly experiences','👨‍👩‍👧 Atrakcje dla rodzin'],['night','🌙 Evening & nightlife','🌙 Wieczory i życie nocne'],['crafts','🧵 Crafts & local makers','🧵 Rękodzieło i lokalni twórcy'],['birding','🦅 Bird-watching','🦅 Obserwacja ptaków']]},
+{key:"regions",q:{en:"Which parts of Jordan attract you?",pl:"Które części Jordanii Cię przyciągają?"},multi:true,o:[['north','🌲 North & green hills','🌲 Północ i zielone wzgórza'],['amman','🏙️ Amman & central Jordan','🏙️ Amman i środkowa Jordania'],['deadsea','🧂 Dead Sea & Jordan Valley','🧂 Morze Martwe i Dolina Jordanu'],['east','🏜️ Eastern desert & castles','🏜️ Wschodnia pustynia i zamki'],['south','🪨 Petra & southern highlands','🪨 Petra i południowe wyżyny'],['rum','🌌 Wadi Rum','🌌 Wadi Rum'],['aqaba','🐠 Aqaba & Red Sea','🐠 Akaba i Morze Czerwone'],['surprise','✨ Surprise me','✨ Zaskocz mnie']]},
+{key:"pace",q:{en:"How do you want the days to feel?",pl:"Jak mają wyglądać Twoje dni?"},multi:true,o:[['slow','🌿 Slow & spacious','🌿 Spokojnie i bez pośpiechu'],['balanced','⚖️ Balanced','⚖️ W równowadze'],['active','🏃 Active','🏃 Aktywnie'],['intense','🔥 Pack it in','🔥 Intensywnie'],['sunrise','🌅 Early starts','🌅 Wczesne starty'],['late','🌙 Late mornings & evenings','🌙 Późne poranki i wieczory']]},
+{key:"duration",q:{en:"How much time do you have?",pl:"Ile masz czasu?"},multi:false,o:[['2','2 days','2 dni'],['3','3 days','3 dni'],['5','5 days','5 dni'],['7','7 days','7 dni'],['10','10+ days','10+ dni']]},
+{key:"budget",q:{en:"What's your comfort level?",pl:"Jaki jest Twój poziom komfortu?"},multi:false,o:[['budget','💰 Budget-conscious','💰 Oszczędnie'],['comfort','💳 Comfortable','💳 Komfortowo'],['premium','✨ Premium','✨ Premium'],['flex','🪄 Flexible','🪄 Elastycznie']]},
+{key:"traveler",q:{en:"Who are you traveling with?",pl:"Z kim podróżujesz?"},multi:true,o:[['solo','🧍 Solo','🧍 Solo'],['couple','❤️ Couple','❤️ Para'],['friends','🧑‍🤝‍🧑 Friends','🧑‍🤝‍🧑 Przyjaciele'],['family','👨‍👩‍👧 Family','👨‍👩‍👧 Rodzina'],['group','👥 Group','👥 Grupa'],['accessible','♿ Accessibility matters','♿ Dostępność jest ważna'],['halal','☪️ Halal-friendly food','☪️ Jedzenie halal'],['vegetarian','🌱 Vegetarian options','🌱 Opcje wegetariańskie']]}
+];
+let step=0,ans={};const qEl=document.getElementById("question"),oEl=document.getElementById("options"),qnum=document.getElementById("qnum"),bar=document.getElementById("bar");
+function renderQ(){let q=qs[step],selected=ans[q.key]||[];if(!Array.isArray(selected))selected=[selected];qEl.textContent=q.q[lang];qnum.textContent=`${I18N[lang].step} ${step+1} of ${qs.length}`;bar.style.width=((step+1)/qs.length*100)+"%";oEl.innerHTML="";q.o.forEach(([v,en,pl])=>{let b=document.createElement("button");b.className="opt"+(selected.includes(v)?" selected":"");b.textContent=lang==="pl"?pl:en;b.onclick=()=>{if(q.multi){selected=selected.includes(v)?selected.filter(x=>x!==v):[...selected,v];ans[q.key]=selected}else ans[q.key]=v;renderQ();updatePreview()};oEl.appendChild(b)});document.getElementById("backBtn").disabled=step===0;document.getElementById("backBtn").textContent=I18N[lang].back;document.getElementById("nextBtn").textContent=step===qs.length-1?I18N[lang].build:I18N[lang].next;document.getElementById("selectionHint").textContent=q.multi?I18N[lang].selectMany:I18N[lang].selectOne}
+function updatePreview(){let count=Object.values(ans).reduce((n,v)=>n+(Array.isArray(v)?v.length:(v?1:0)),0);document.getElementById("match").textContent=lang==="pl"?`${count} wybranych opcji`:`${count} choices selected`;let labels=[];qs.forEach(q=>{let vals=ans[q.key]||[];if(!Array.isArray(vals))vals=[vals];vals.forEach(v=>{let f=q.o.find(x=>x[0]===v);if(f)labels.push((lang==="pl"?f[2]:f[1]).replace(/^\S+\s/,""))})});let fallback=lang==="pl"?["Wybierz zainteresowania","Ustal styl podróży","Stworzymy Twoją trasę"]:["Choose multiple interests","Set your trip style","We'll build your route"];document.getElementById("previewList").innerHTML=(labels.length?labels.slice(0,5):fallback).map(x=>`<div>✓ ${x}</div>`).join("")}
+document.getElementById("nextBtn").onclick=()=>{let q=qs[step],v=ans[q.key];if(!v||(Array.isArray(v)&&!v.length))return alert(q.multi?"Choose at least one option.":"Choose an option first.");if(step<qs.length-1){step++;renderQ()}else buildResult()};document.getElementById("backBtn").onclick=()=>{if(step>0){step--;renderQ()}};
+function buildResult(){let interests=ans.interests||[],route=["Amman"];if(interests.includes("history")||interests.includes("architecture"))route.push("Jerash");if(interests.includes("culture")||interests.includes("religion"))route.push("Madaba");if(interests.includes("nature")||interests.includes("hiking"))route.push("Dana");if(interests.includes("adventure")||interests.includes("desert"))route.push("Wadi Rum");if(interests.includes("sea")||interests.includes("wellness"))route.push("Aqaba");if(!route.includes("Petra")&&(interests.includes("history")||interests.includes("photography")||interests.includes("surprise")))route.splice(Math.min(2,route.length),0,"Petra");if(route.length<3)route.push("Petra");route=[...new Set(route)];let score=Math.min(99,72+Math.min(20,interests.length*2)+(["7","10"].includes(ans.duration)?5:0));document.getElementById("result").classList.add("show");const ready=lang==="pl"?"Twoja Jordania jest gotowa":"Your Jordan is ready";const match=lang==="pl"?"dopasowanie":"match";const intro=lang==="pl"?`Pierwsza trasa została dopasowana do ${interests.length||"wybranych"} zainteresowań, Twojego czasu i stylu podróży.`:`Your first route is shaped around ${interests.length||"your"} selected interests, your time and your travel style.`;const routeLabel=lang==="pl"?"Twoja trasa":"Your route";document.getElementById("result").innerHTML=`<div class="eyebrow" style="color:#f0ae92">${ready}</div><h3>${score}% ${match}</h3><p style="color:#ddd;max-width:720px;line-height:1.7">${intro}</p><div style="margin-top:18px"><b>${routeLabel}</b><div style="margin-top:10px">${route.map((x,i)=>`<span class="pill">${i+1}. ${x}</span>`).join("")}</div></div>`;document.getElementById("result").scrollIntoView({behavior:"smooth",block:"center"})}
+renderQ();updatePreview();
 
-  <footer>EcoBloom © 2025 — Weather by Open‑Meteo • Maps by OpenStreetMap • Built for delightful, zero‑setup predictions</footer>
+const itineraryData={en:[
+{title:"Amman — First Impressions",summary:"Capital, viewpoints, old city, food and a gentle introduction to Jordan.",rows:[
+["08:00","Breakfast & departure briefing","45 min","Easy","Food","Hotel / café","Start slowly; hydrate before walking."],["09:00","Amman Citadel + Temple of Hercules","1h 45m","Balanced","History","Walk / short taxi","Best early for cooler light and fewer crowds."],["11:00","Roman Theatre + downtown walk","1h 30m","Balanced","History","Walk","Explore the old commercial heart."],["12:45","Lunch — local Jordanian dishes","1h","Easy","Food","Restaurant","Ask for halal options and local specialties."],["14:15","Rainbow Street + Jabal Amman","1h 30m","Easy","Culture","Walk / taxi","Cafés, shops and city views."],["16:15","Rest / hotel check-in","1h 30m","Slow","Rest","Taxi / hotel","Leave space before the evening."],["18:00","Sunset viewpoint + dinner","2h","Easy","Food / Culture","Taxi + walk","Golden-hour photography and dinner."]]},
+{title:"Irbid + Umm Qais — Northern Jordan",summary:"Give Irbid a full day: heritage, local culture, then the Roman north.",rows:[
+["07:30","Breakfast & drive north","1h 45m","Balanced","Transport","Car / driver","Northbound day; keep water in the car."],["09:30","Dar Al-Saraya Museum","1h","Easy","History","Walk","Ottoman-era heritage in central Irbid."],["10:45","Beit Arar + local Irbid walk","1h 15m","Easy","Culture","Walk","A cultural stop tied to poet Mustafa Wahbi Al-Tal."],["12:15","Lunch in Irbid","1h","Easy","Food","Restaurant","Use this as the local-food stop."],["13:30","Drive to Umm Qais / Gadara","1h 15m","Balanced","Transport","Car / driver","Road time can vary."],["14:45","Umm Qais archaeological site","2h","Balanced","History","Walk","Roman ruins, basalt architecture and wide northern views."],["17:00","Sunset / return","2h","Easy","Photography","Car / driver","Return toward Amman or stay north."]]},
+{title:"Madaba + Mount Nebo + Dead Sea",summary:"Mosaics, viewpoints and a relaxed Dead Sea finish.",rows:[
+["08:00","Breakfast & departure","45 min","Easy","Food","Hotel","Pack swimwear and sun protection."],["09:00","Madaba old town + mosaic heritage","1h 45m","Balanced","Culture / History","Walk","Explore churches, mosaics and craft shops."],["11:00","Drive to Mount Nebo","30 min","Easy","Transport","Car / driver","Short transfer."],["11:30","Mount Nebo viewpoint","1h","Easy","Religion / History","Walk","Allow time for the landscape and viewpoint."],["13:00","Lunch","1h","Easy","Food","Restaurant","Choose a stop on the route."],["14:30","Dead Sea resort / beach time","2h 30m","Slow","Wellness","Car + walk","Follow local safety guidance around the water."],["17:30","Sunset by the Dead Sea","1h","Slow","Nature","Walk","Excellent golden-hour finish."]]},
+{title:"Petra — The Nabataean Day",summary:"A full day for Jordan’s signature archaeological experience.",rows:[
+["07:00","Breakfast & Petra entrance","45 min","Early","Food / History","Walk","Start early; Petra deserves time."],["08:00","Siq → Treasury","1h 30m","Balanced","History","Walk","Allow time for photos and interpretation."],["09:30","Royal Tombs + Colonnaded Street","2h","Active","History","Walk","Comfortable shoes recommended."],["11:45","Lunch break","1h","Slow","Food","On-site / nearby","Refuel before longer walking."],["13:00","Monastery trail / selected route","2h 30m","Active","Hiking / History","Walk / steps","Choose based on fitness and heat."],["16:00","Return + rest","1h 30m","Slow","Rest","Walk / hotel","Keep evening light after a long day."],["18:00","Dinner + Petra night option","2h","Easy","Culture","Walk / taxi","Check current event schedule before planning."]]},
+{title:"Wadi Rum — Into the Desert",summary:"Transfer south, 4x4 desert landscapes, sunset and a camp night.",rows:[
+["08:00","Breakfast & checkout","45 min","Easy","Food","Hotel","Leave with water and sun protection."],["09:00","Transfer to Wadi Rum","2h","Balanced","Transport","Car / driver","Southbound transfer."],["11:30","4x4 desert exploration","3h","Active","Adventure","4x4","Canyons, viewpoints and desert landscapes."],["14:30","Lunch at camp / local meal","1h","Easy","Food","Camp","Confirm meal requirements in advance."],["15:30","Tea + downtime","1h","Slow","Culture","Camp","Slow down and take in the landscape."],["17:00","Sunset viewpoint","1h 30m","Easy","Photography","4x4 / walk","Prime light for photography."],["19:00","Bedouin-style dinner + stargazing","3h","Slow","Culture / Nature","Camp","Weather and moon phase affect stargazing."]]},
+{title:"Aqaba — Red Sea Finish",summary:"Marine experiences, seafood, beach time and a relaxed final evening.",rows:[
+["08:00","Breakfast & transfer to Aqaba","1h 30m","Balanced","Transport","Car / driver","Short southern transfer."],["10:00","Aqaba Marine Reserve / snorkeling","2h 30m","Active","Sea / Nature","Boat / water","Use licensed operators and follow reserve guidance."],["13:00","Lunch by the Red Sea","1h","Easy","Food","Restaurant","Seafood or other suitable local options."],["14:30","Beach / free time","2h","Slow","Wellness","Walk","Keep the afternoon flexible."],["17:00","Aqaba waterfront + sunset","1h 30m","Easy","Culture / Sea","Walk","Final photos and souvenir stop."],["19:00","Farewell dinner","2h","Easy","Food","Restaurant","End with a relaxed local meal."]]},
+{title:"Optional 7-Day Extension — Eastern Jordan",summary:"Add the eastern desert for a different side of Jordan.",rows:[
+["08:00","Drive east from Amman","1h","Balanced","Transport","Car / driver","Best with an early start."],["09:15","Azraq Oasis / wildlife experience","2h","Easy","Nature / Birding","Walk","Check seasonal conditions and access."],["11:45","Quseir Amra","1h","Easy","History","Walk","UNESCO World Heritage Site."],["13:00","Lunch / roadside stop","1h","Easy","Food","Restaurant / packed meal","Carry water in remote areas."],["14:30","Desert Castles route","2h 30m","Balanced","History","Car","Choose a focused subset rather than rushing all sites."],["17:30","Return to Amman","1h 30m","Easy","Transport","Car / driver","Flexible final evening."]]}],pl:[]} ; itineraryData.pl=itineraryData.en.map(d=>({title:d.title.replace("First Impressions","Pierwsze wrażenia").replace("Northern Jordan","Północna Jordania").replace("Madaba + Mount Nebo + Dead Sea","Madaba + Góra Nebo + Morze Martwe").replace("The Nabataean Day","Dzień Nabatejczyków").replace("Into the Desert","W głąb pustyni").replace("Red Sea Finish","Finał nad Morzem Czerwonym").replace("Eastern Jordan","Wschodnia Jordania"),summary:d.summary,rows:d.rows.map(r=>r)}));
+function renderItinerary(){
+ const data=itineraryData[lang]||itineraryData.en;
+ const controls=document.getElementById("dayControls");
+ controls.innerHTML=data.map((d,i)=>`<button class="${i===0?'active':''}" data-day="${i}">${I18N[lang].day} ${i+1}</button>`).join("");
+ const headers=lang==="pl"?['Godzina','Miejsce / aktywność','Czas','Tempo','Typ','Posiłek / transport','Wskazówka']:['Time','Place / activity','Duration','Pace','Type','Meal / transport','Planning note'];
+ document.getElementById("itin").innerHTML=data.map((d,i)=>`<article class="itin-day" id="itin-day-${i}" data-itin-day="${i}">
+ <div class="itin-day-title"><div><div class="eyebrow">${I18N[lang].day} ${i+1}</div><h3>${d.title}</h3></div><div class="itin-summary">${d.summary}</div></div>
+ <div class="itin-table-wrap"><table class="itin-table"><thead><tr>${headers.map(h=>`<th>${h}</th>`).join("")}</tr></thead><tbody>${d.rows.map(r=>`<tr><td><b>${r[0]}</b></td><td><b>${r[1]}</b></td><td>${r[2]}</td><td><span class="itin-pill">${r[3]}</span></td><td>${r[4]}</td><td>${r[5]}</td><td>${r[6]}</td></tr>`).join("")}</tbody></table></div>
+ <div class="itin-mobile-note">${lang==="pl"?'Na telefonie przewiń tabelę poziomo, aby zobaczyć wszystkie kolumny.':'On a phone, scroll the table horizontally to see every column.'}</div></article>`).join("");
+ document.querySelectorAll("[data-day]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-day]").forEach(x=>x.classList.remove("active"));b.classList.add("active");const target=document.getElementById("itin-day-"+b.dataset.day);if(target)target.scrollIntoView({behavior:"smooth",block:"start"})});
+}
+renderItinerary();
+const places=[
+{name:"Amman",lat:31.9539,lon:35.9106,type:"culture",desc:"Jordan's capital — urban culture, food, museums and layered history.",tags:["food","culture","history"]},
+{name:"Citadel & Roman Theatre",lat:31.951,lon:35.934,type:"history",desc:"Major historic landmarks in central Amman.",tags:["history","architecture"]},
+{name:"Jerash",lat:32.2747,lon:35.8914,type:"history",desc:"Ancient Greco-Roman city with monumental ruins.",tags:["history","architecture"]},
+{name:"Ajloun",lat:32.3333,lon:35.7528,type:"nature",desc:"Northern hills, forests and Ajloun Castle.",tags:["nature","history","hiking"]},
+{name:"Umm Qais",lat:32.6532,lon:35.6849,type:"history",desc:"Ancient Gadara with wide views across the north.",tags:["history","photography","architecture"]},
+{name:"Pella",lat:32.4586,lon:35.628,type:"history",desc:"Archaeological site in northern Jordan with layers of ancient settlement.",tags:["history","photography"]},
+{name:"Irbid",lat:32.5556,lon:35.85,type:"culture",desc:"Jordan's northern university city and an official tourism destination.",tags:["culture","food","history"]},
+{name:"Dar Al-Saraya Museum",lat:32.556,lon:35.846,type:"history",desc:"Ottoman-era heritage building in central Irbid.",tags:["history","culture","architecture"]},
+{name:"Beit Arar",lat:32.5565,lon:35.8475,type:"culture",desc:"Cultural house associated with Jordanian poet Mustafa Wahbi Al-Tal.",tags:["culture","literature","history"]},
+{name:"As-Salt",lat:32.0392,lon:35.7272,type:"history",desc:"Historic city recognized by UNESCO for its urban hospitality and architecture.",tags:["history","culture","food"]},
+{name:"Madaba",lat:31.7167,lon:35.7931,type:"history",desc:"Historic mosaics, churches and a gateway toward Mount Nebo.",tags:["history","religion","crafts"]},
+{name:"Mount Nebo",lat:31.7683,lon:35.7253,type:"religion",desc:"Historic viewpoint and pilgrimage destination.",tags:["religion","photography","history"]},
+{name:"Bethany Beyond the Jordan",lat:31.835,lon:35.55,type:"religion",desc:"UNESCO World Heritage Site associated with the baptism tradition.",tags:["religion","history"]},
+{name:"Dead Sea",lat:31.559,lon:35.4732,type:"sea",desc:"Salt-rich lake, wellness and landscape experience.",tags:["sea","wellness","photography"]},
+{name:"Wadi Mujib",lat:31.465,lon:35.58,type:"adventure",desc:"Dramatic canyon landscapes and adventure experiences.",tags:["adventure","hiking","nature"]},
+{name:"Karak Castle",lat:31.1853,lon:35.7048,type:"history",desc:"Major medieval fortress on the King's Highway.",tags:["history","architecture","photography"]},
+{name:"Shobak Castle",lat:30.5207,lon:35.5597,type:"history",desc:"Crusader-era castle in the southern highlands.",tags:["history","photography"]},
+{name:"Dana",lat:30.675,lon:35.59,type:"nature",desc:"Mountain landscapes, trails and biodiversity around Dana.",tags:["nature","hiking","photography"]},
+{name:"Feynan",lat:30.55,lon:35.37,type:"nature",desc:"Remote desert-edge landscapes and eco-tourism experiences.",tags:["nature","hiking","wellness"]},
+{name:"Petra",lat:30.3285,lon:35.4444,type:"history",desc:"Nabataean rock-cut city and UNESCO World Heritage Site.",tags:["history","photography","architecture","hiking"]},
+{name:"Little Petra",lat:30.383,lon:35.463,type:"history",desc:"Smaller Nabataean site north of Petra with rock-cut spaces.",tags:["history","photography","hiking"]},
+{name:"Wadi Rum",lat:29.5764,lon:35.4203,type:"adventure",desc:"Protected desert landscape and UNESCO World Heritage Site.",tags:["adventure","desert","photography","nature"]},
+{name:"Aqaba",lat:29.5321,lon:35.0063,type:"sea",desc:"Jordan's Red Sea city with beaches, diving and marine experiences.",tags:["sea","food","wellness"]},
+{name:"Aqaba Marine Reserve",lat:29.45,lon:34.98,type:"sea",desc:"Jordan's marine protected area for underwater and coastal experiences.",tags:["sea","nature","photography"]},
+{name:"Umm Al-Jimal",lat:32.3257,lon:36.3719,type:"history",desc:"Historic basalt settlement inscribed on UNESCO's World Heritage List in 2024.",tags:["history","architecture","photography"]},
+{name:"Azraq",lat:31.835,lon:36.827,type:"nature",desc:"Eastern oasis area and an important stop for nature and birding.",tags:["nature","birding","photography"]},
+{name:"Quseir Amra",lat:31.801,lon:36.588,type:"history",desc:"Early Islamic desert castle complex and UNESCO World Heritage Site.",tags:["history","architecture","photography"]},
+{name:"Desert Castles",lat:31.9,lon:36.5,type:"history",desc:"A network of historic desert structures east of Amman.",tags:["history","architecture","photography"]},
+{name:"Um er-Rasas",lat:31.5,lon:35.93,type:"history",desc:"Archaeological site with early Christian remains and mosaics; UNESCO World Heritage Site.",tags:["history","religion","crafts"]}
+];
+const map=L.map("map",{scrollWheelZoom:false}).setView([31.25,36.0],7);
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:'&copy; OpenStreetMap contributors'}).addTo(map);
+let markers=[];
+function markerColor(t){return t==="adventure"?"#a9553c":t==="nature"?"#56725d":t==="sea"?"#3f7184":t==="religion"?"#806b92":t==="culture"?"#b67a39":"#5a4a3d"}
+places.forEach(p=>{let m=L.circleMarker([p.lat,p.lon],{radius:8,fillColor:markerColor(p.type),color:"#fff",weight:2,fillOpacity:.95});m.bindPopup(`<div style="min-width:220px"><b style="font-family:serif;font-size:20px">${p.name}</b><p style="line-height:1.5;margin:7px 0;color:#555">${p.desc}</p><div>${p.tags.map(t=>`<span style="display:inline-block;background:#eee;padding:4px 7px;border-radius:99px;font-size:10px;margin:2px">${t}</span>`).join("")}</div><button style="margin-top:10px;border:0;background:#151312;color:#fff;padding:8px 12px;border-radius:999px;cursor:pointer" onclick="window.addPlace('${p.name.replace(/'/g,"\\'")}')">Add to journey</button></div>`);m.addTo(map);markers.push({m,p})});
+function applyMapFilter(f,search=""){let q=search.toLowerCase().trim(),shown=0;markers.forEach(({m,p})=>{let ok=(f==="all"||p.type===f)&&(!q||(p.name+" "+p.desc+" "+p.tags.join(" ")).toLowerCase().includes(q));if(ok){m.addTo(map);shown++}else map.removeLayer(m)});document.getElementById("mapCounter").textContent=shown+" destinations shown";}
+document.querySelectorAll("[data-mfilter]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-mfilter]").forEach(x=>x.classList.remove("active"));b.classList.add("active");applyMapFilter(b.dataset.mfilter,document.getElementById("mapSearch").value)});
+document.getElementById("mapSearch").addEventListener("input",()=>{let active=document.querySelector("[data-mfilter].active");applyMapFilter(active?active.dataset.mfilter:"all",document.getElementById("mapSearch").value)});
+document.getElementById("fitJordan").onclick=()=>map.fitBounds([[29.0,34.5],[33.5,39.3]],{padding:[20,20]});
+applyMapFilter("all");
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script>
-    // --- Bright, one-file, auto-everything prototype ---
-    let map, marker;
-    const statusEl = document.getElementById('status');
-    const predictionEl = document.getElementById('prediction');
-    const weatherEl = document.getElementById('weather');
-    const locationInfoEl = document.getElementById('locationInfo');
-    const weekSummaryEl = document.getElementById('weekSummary');
-
-    const plantDefaults = {
-      tomato: { base: 10, gdd: 600 },
-      cucumber: { base: 10, gdd: 250 },
-      pepper: { base: 10, gdd: 500 },
-      wheat: { base: 0, gdd: 700 },
-      lettuce: { base: 5, gdd: 200 },
-    };
-
-    function initMap(lat, lon, name){
-      map = L.map('map').setView([lat, lon], 9);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
-      marker = L.marker([lat, lon], { draggable: true }).addTo(map);
-      marker.bindPopup(name).openPopup();
-      map.on('click', (e)=>{ setLocation(e.latlng.lat, e.latlng.lng, 'Custom spot'); });
-      marker.on('dragend', ()=>{ const {lat, lng}=marker.getLatLng(); setLocation(lat, lng, 'Dragged marker'); });
-    }
-
-    function setLocation(lat, lon, name){
-      map.setView([lat, lon], 10);
-      marker.setLatLng([lat, lon]).bindPopup(name).openPopup();
-      locationInfoEl.textContent = `${name} — ${lat.toFixed(4)}, ${lon.toFixed(4)}`;
-      fetchAndPredict(lat, lon);
-    }
-
-    function setStatus(msg){ statusEl.textContent = msg; }
-    function fmt(d){ const dt = new Date(d); const y = dt.getFullYear(); const m=(dt.getMonth()+1).toString().padStart(2,'0'); const da=dt.getDate().toString().padStart(2,'0'); return `${y}-${m}-${da}`; }
-
-    async function fetchWeather(lat, lon){
-      const params = new URLSearchParams({ latitude: lat, longitude: lon, daily: 'temperature_2m_max,temperature_2m_min,precipitation_sum', forecast_days: '16', past_days: '30', timezone: 'auto' });
-      const url = `https://api.open-meteo.com/v1/forecast?${params.toString()}`;
-      const resp = await fetch(url);
-      if(!resp.ok) throw new Error('Weather request failed');
-      return await resp.json();
-    }
-
-    function renderTable(d){
-      let html = '';
-      for(let i=0;i<d.time.length;i++){
-        html += `<tr><td>${d.time[i]}</td><td>${d.temperature_2m_min[i].toFixed(1)}</td><td>${d.temperature_2m_max[i].toFixed(1)}</td><td>${(d.precipitation_sum[i]||0).toFixed(1)}</td></tr>`;
-      }
-      weatherEl.innerHTML = html;
-    }
-
-    function renderWeekSummary(d){
-      let rain7=0, tmax=-1e9, tmin=1e9;
-      for(let i=0;i<Math.min(7,d.time.length);i++){ rain7+=(d.precipitation_sum[i]||0); tmax=Math.max(tmax,d.temperature_2m_max[i]); tmin=Math.min(tmin,d.temperature_2m_min[i]); }
-      weekSummaryEl.textContent = `Max/Min (7d): ${tmax.toFixed(1)}° / ${tmin.toFixed(1)}°. Rain ≈ ${rain7.toFixed(1)} mm.`;
-    }
-
-    function gddForDay(tmin, tmax, base){ const avg=(tmin + tmax)/2; return Math.max(0, avg - base); }
-
-    async function fetchAndPredict(lat, lon){
-      try{
-        setStatus('Fetching weather & predicting…');
-        const data = await fetchWeather(lat, lon);
-        const d = data.daily;
-        renderTable(d);
-        renderWeekSummary(d);
-
-        // Defaults & assumptions
-        const plantSel = document.getElementById('plantType');
-        const baseInput = document.getElementById('baseTemp');
-        const gddInput  = document.getElementById('gddTarget');
-        const dateInput = document.getElementById('sowDate');
-        const assumeNote = document.getElementById('assumptionNote');
-
-        if(!dateInput.value){
-          // assume sowing ~30 days ago when unspecified
-          const today = new Date(); const assumed = new Date(today.getTime() - 30*24*3600*1000);
-          dateInput.value = fmt(assumed);
-          assumeNote.textContent = 'Assumed sowing date: ~30 days ago (you can change it).';
-        }
-        if(plantSel.value !== 'custom'){
-          const def = plantDefaults[plantSel.value];
-          baseInput.value = def.base; gddInput.value = def.gdd;
-        }
-
-        const base = parseFloat(baseInput.value||'10');
-        const target = parseFloat(gddInput.value||'600');
-        const sowDate = new Date(dateInput.value + 'T00:00:00');
-
-        // Accumulate GDD from sow date
-        let acc=0, reached=null;
-        for(let i=0;i<d.time.length;i++){
-          const dayDate = new Date(d.time[i] + 'T00:00:00');
-          if(dayDate < sowDate) continue;
-          acc += gddForDay(d.temperature_2m_min[i], d.temperature_2m_max[i], base);
-          if(!reached && acc >= target) reached = dayDate;
-        }
-        predictionEl.innerHTML = reached ? `🌸 Estimated bloom: <b>${fmt(reached)}</b> (GDD≈${acc.toFixed(0)} / ${target})` : 'ℹ️ Not enough accumulated GDD in the available window. Try a lower threshold or wait for updates.';
-        setStatus('Ready');
-      }catch(e){ setStatus('⚠️ Could not fetch weather.'); }
-    }
-
-    // Auto geolocate on load; fallback to a default
-    function autoStart(){
-      const defaultLat=31.95, defaultLon=35.91, defaultName='Default (Amman)';
-      initMap(defaultLat, defaultLon, 'EcoBloom');
-      if(navigator.geolocation){
-        navigator.geolocation.getCurrentPosition(
-          (pos)=>{ const {latitude,longitude}=pos.coords; setLocation(latitude, longitude, 'Your location'); },
-          ()=>{ setLocation(defaultLat, defaultLon, defaultName); },
-          { enableHighAccuracy:true, timeout:12000, maximumAge:0 }
-        );
-      }else{
-        setLocation(defaultLat, defaultLon, defaultName);
-      }
-
-      // Hook manual recalc
-      document.getElementById('btnPredict').addEventListener('click', ()=>{
-        const ll = marker.getLatLng(); fetchAndPredict(ll.lat, ll.lng);
-      });
-      document.getElementById('plantType').addEventListener('change', ()=>{
-        const ll = marker.getLatLng(); fetchAndPredict(ll.lat, ll.lng);
-      });
-    }
-
-    document.addEventListener('DOMContentLoaded', autoStart);
-  </script>
-  <script>
-    // === Monthly climate & ideal harvest additions (no regex parsing) ===
-    const harvestDefaults = { tomato:45, cucumber:15, pepper:55, wheat:20, lettuce:30 };
-    let lastBloomDate = null;
-
-    function updateHarvestDate(){
-      const offsetInput = document.getElementById('harvestOffset');
-      if(!offsetInput) return;
-      const offset = parseInt(offsetInput.value || '45', 10);
-      const el = document.getElementById('harvest');
-      if(lastBloomDate){
-        const d = new Date(lastBloomDate.getTime() + offset*24*3600*1000);
-        el.innerHTML = '✅ Ideal harvest: <b>' + (d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0')) + '</b> (+' + offset + 'd)';
-      } else {
-        el.textContent = '— (calculate bloom first)';
-      }
-    }
-
-    async function fetchMonthly(lat, lon){
-      const end = new Date();
-      const start = new Date(end.getTime() - 365*24*3600*1000);
-      const fmt = d => d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
-      const url = 'https://archive-api.open-meteo.com/v1/era5?latitude=' + lat + '&longitude=' + lon + '&start_date=' + fmt(start) + '&end_date=' + fmt(end) + '&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=auto';
-      const resp = await fetch(url);
-      if(!resp.ok) throw new Error('archive failed');
-      return await resp.json();
-    }
-
-    function renderMonthlyGrid(data){
-      const g = document.getElementById('monthlyGrid');
-      if(!g) return;
-      const d = data.daily; const months = {};
-      for(let i=0;i<d.time.length;i++){
-        const dt = new Date(d.time[i]);
-        const key = dt.getFullYear() + '-' + String(dt.getMonth()+1).padStart(2,'0');
-        if(!months[key]) months[key] = {tmin:[], tmax:[], rain:0};
-        months[key].tmin.push(d.temperature_2m_min[i]);
-        months[key].tmax.push(d.temperature_2m_max[i]);
-        months[key].rain += (d.precipitation_sum[i]||0);
-      }
-      const keys = Object.keys(months).sort().slice(-12);
-      const maxT = Math.max.apply(null, keys.map(k=>Math.max.apply(null, months[k].tmax)));
-      const maxR = Math.max.apply(null, keys.map(k=>months[k].rain));
-      g.innerHTML = '';
-      const mnames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-      keys.forEach(k=>{
-        const idx = parseInt(k.split('-')[1],10)-1;
-        const avg = arr => arr.reduce((s,x)=>s+x,0)/arr.length;
-        const avgMin = avg(months[k].tmin).toFixed(1);
-        const avgMax = avg(months[k].tmax).toFixed(1);
-        const rain = months[k].rain.toFixed(1);
-        const h1 = Math.max(6, (avgMax/maxT)*48);
-        const h2 = Math.max(3, (avgMin/maxT)*48);
-        const h3 = Math.max(3, (months[k].rain/maxR)*48);
-        const cell = document.createElement('div'); cell.className = 'mcell';
-        cell.innerHTML = '<div class="mname">' + mnames[idx] + '</div>' +
-          '<div class="barwrap">' +
-            '<div class="bar2" style="height:' + h1 + 'px" title="Avg Tmax ' + avgMax + '°C"></div>' +
-            '<div class="bar" style="height:' + h2 + 'px" title="Avg Tmin ' + avgMin + '°C"></div>' +
-            '<div class="bar3" style="height:' + h3 + 'px" title="Total rain ' + rain + ' mm"></div>' +
-          '</div>' +
-          '<div class="mini">Tmax ' + avgMax + '° / Tmin ' + avgMin + '° · Rain ' + rain + 'mm</div>';
-        g.appendChild(cell);
-      });
-    }
-
-    document.addEventListener('click', function(e){
-      if(e.target && e.target.id==='btnMonthly'){
-        const ll = marker.getLatLng();
-        setStatus('Building monthly climate…');
-        fetchMonthly(ll.lat, ll.lng).then(function(cl){ renderMonthlyGrid(cl); setStatus('Ready'); }).catch(function(){ setStatus('Monthly climate failed'); });
-      }
-      if(e.target && e.target.id==='applyHarvest'){
-        updateHarvestDate();
-      }
-    });
-
-    // Wrap existing predictor to also set harvest
-    (function(){
-      const old = fetchAndPredict;
-      fetchAndPredict = async function(lat, lon){
-        await old(lat, lon);
-        const plantSel = document.getElementById('plantType');
-        const offsetEl = document.getElementById('harvestOffset');
-        const def = harvestDefaults[plantSel.value];
-        if(def && (!offsetEl.value || offsetEl.value==='0')) offsetEl.value = def;
-        const b = document.querySelector('#prediction b');
-        if(b){ lastBloomDate = new Date(b.textContent + 'T00:00:00'); }
-        updateHarvestDate();
-      }
-    })();
-  </script>
+let saved=[];const toast=document.getElementById("toast");
+function notify(msg){toast.textContent=msg;toast.classList.add("show");setTimeout(()=>toast.classList.remove("show"),1800)}
+function emojiFor(p){return p.type==="history"?"🏛️":p.type==="nature"?"🌿":p.type==="adventure"?"🔥":p.type==="sea"?"🌊":p.type==="religion"?"🕊️":"✨"}
+function renderExplorer(filter="all",search=""){let q=search.toLowerCase().trim();let list=places.filter(p=>(filter==="all"||p.type===filter)&&(!q||(p.name+" "+p.desc+" "+p.tags.join(" ")).toLowerCase().includes(q)));document.getElementById("explorerList").innerHTML=list.map(p=>`<div class="place-row" data-open="${p.name.replace(/"/g,"&quot;")}"><div class="emoji">${emojiFor(p)}</div><div><b>${p.name}</b><small>${p.tags.slice(0,3).join(" • ")}</small></div><button class="add-mini" data-add="${p.name.replace(/"/g,"&quot;")}">Add</button></div>`).join("")||"<div style='color:#777;padding:20px'>No destinations found.</div>";document.querySelectorAll("[data-add]").forEach(b=>b.onclick=e=>{e.stopPropagation();addSaved(b.dataset.add)});document.querySelectorAll("[data-open]").forEach(r=>r.onclick=()=>openPlace(r.dataset.open))}
+function addSaved(name){if(!saved.includes(name)){saved.push(name);renderSaved();notify(name+" added to your journey")}else notify("Already in your journey")}
+function renderSaved(){let el=document.getElementById("savedPlaces");el.innerHTML=saved.length?saved.map((n,i)=>`<div class="route-stop"><span class="route-dot"></span><div><b>${i+1}. ${n}</b><small>Saved destination</small></div></div>`).join(""):"<div class='route-stop'><span class='route-dot'></span><div><b>Your journey is empty</b><small>Use “Add” on any place to start.</small></div></div>"}
+document.getElementById("placeSearch").addEventListener("input",e=>renderExplorer(exploreFilter,e.target.value));let exploreFilter="all";document.querySelectorAll("[data-xfilter]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-xfilter]").forEach(x=>x.classList.remove("active"));b.classList.add("active");exploreFilter=b.dataset.xfilter;renderExplorer(exploreFilter,document.getElementById("placeSearch").value)});
+function openPlace(name){let p=places.find(x=>x.name===name);if(!p)return;document.getElementById("modalTitle").textContent=p.name;document.getElementById("modalDesc").textContent=p.desc;document.getElementById("modalTags").innerHTML=p.tags.map(t=>`<span class="source-badge">${t}</span>`).join("");let source=["Petra","Wadi Rum","As-Salt","Umm Al-Jimal","Quseir Amra","Um er-Rasas","Bethany Beyond the Jordan","Aqaba Marine Reserve"].includes(p.name)?"https://whc.unesco.org/en/statesparties/jo":"https://international.visitjordan.com/";document.getElementById("modalSource").href=source;document.getElementById("placeModal").classList.add("open")}
+window.addPlace=addSaved;document.getElementById("closeModal").onclick=()=>document.getElementById("placeModal").classList.remove("open");document.getElementById("placeModal").onclick=e=>{if(e.target.id==="placeModal")e.currentTarget.classList.remove("open")};document.querySelectorAll(".story-card").forEach(c=>c.onclick=()=>openPlace(c.dataset.place));renderExplorer();renderSaved();
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add("visible")}),{threshold:.12});document.querySelectorAll(".reveal").forEach(x=>io.observe(x));document.addEventListener("mousemove",e=>{let g=document.getElementById("cursorGlow");g.style.left=e.clientX+"px";g.style.top=e.clientY+"px"});document.addEventListener("keydown",e=>{if(e.key==="Escape")document.getElementById("placeModal").classList.remove("open")});
+</script>
 </body>
 </html>
